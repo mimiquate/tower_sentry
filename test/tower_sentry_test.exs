@@ -329,7 +329,7 @@ defmodule TowerSentryTest do
             "message" => %{
               "formatted" => "(exit) :abnormal"
             },
-            "threads" => [thread],
+            "threads" => [%{"stacktrace" => stacktrace}],
             "request" => %{
               "method" => "GET",
               "url" => ^url
@@ -339,15 +339,7 @@ defmodule TowerSentryTest do
       )
 
       # Plug.Cowboy doesn't provide stacktrace for exits
-      assert %{"stacktrace" => %{"frames" => nil}} = thread
-
-      # assert(
-      #   %{
-      #     "function" => "anonymous fn/2 in TowerSentry.ErrorTestPlug.do_match/4",
-      #     "filename" => "test/support/error_test_plug.ex",
-      #     "lineno" => 20
-      #   } = List.last(frames)
-      # )
+      assert empty_stacktrace?(stacktrace)
 
       send(parent, {ref, :sent})
 
@@ -477,4 +469,11 @@ defmodule TowerSentryTest do
     send(Sentry.Dedupe, {:sweep, 0})
     _ = :sys.get_state(Sentry.Dedupe)
   end
+
+  # sentry-elixir 10.6
+  defp empty_stacktrace?(nil), do: true
+  # sentry-elixir 10.7
+  # https://github.com/getsentry/sentry-elixir/pull/775
+  defp empty_stacktrace?(%{"frames" => nil}), do: true
+  defp empty_stacktrace?(_), do: false
 end

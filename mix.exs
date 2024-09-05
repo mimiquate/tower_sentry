@@ -26,12 +26,15 @@ defmodule TowerSentry.MixProject do
   defp deps do
     [
       {:tower, "~> 0.5.1"},
-      {:sentry, "~> 10.7"},
+      {:sentry, "~> 10.6"},
 
       # Optional
       {:jason, "~> 1.4", optional: true},
       {:hackney, "~> 1.20", optional: true},
       {:plug, "~> 1.16", optional: true},
+
+      # Dev
+      {:blend, "~> 0.4.0", only: :dev},
 
       # Test
       {:bypass, "~> 2.1", only: :test},

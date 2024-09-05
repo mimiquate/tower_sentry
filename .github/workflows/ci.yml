@@ -15,6 +15,7 @@ jobs:
             lint: true
           - elixir: '1.16'
             erlang: '26.2.5'
+            blend: sentry_10_6
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -28,6 +29,8 @@ jobs:
         with:
           otp-version: ${{ matrix.erlang }}
           elixir-version: ${{ matrix.elixir }}
+      - run: cp blend/${{ matrix.blend }}.mix.lock mix.lock
+        if: ${{ matrix.blend }}
       - run: mix deps.get --check-locked
       - run: mix format --check-formatted
         if: ${{ matrix.lint }}
