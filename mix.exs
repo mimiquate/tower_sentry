@@ -28,15 +28,12 @@ defmodule TowerSentry.MixProject do
       {:tower, "~> 0.5.0"},
       {:sentry, "~> 10.5"},
 
-      # Optional
-      {:jason, "~> 1.4", optional: true},
-      {:hackney, "~> 1.20", optional: true},
-      {:plug, "~> 1.16", optional: true},
-
       # Dev
       {:blend, "~> 0.4.0", only: :dev},
 
       # Test
+      {:jason, "~> 1.4", only: :test},
+      {:hackney, "~> 1.20", only: :test},
       {:bypass, "~> 2.1", only: :test},
       {:plug_cowboy, "~> 2.7", only: :test},
       {:bandit, "~> 1.5", only: :test}
