@@ -1,11 +1,14 @@
 # TowerSentry
 
-**TODO: Add description**
+[![ci](https://github.com/mimiquate/tower_sentry/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mimiquate/tower_sentry/actions?query=branch%3Amain)
+[![Hex.pm](https://img.shields.io/hexpm/v/tower_sentry.svg)](https://hex.pm/packages/tower_sentry)
+[![Documentation](https://img.shields.io/badge/Documentation-purple.svg)](https://hexdocs.pm/tower_sentry)
+
+[Tower](https://github.com/mimiquate/tower) reporter for [Sentry](https://sentry.io).
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `tower_sentry` to your list of dependencies in `mix.exs`:
+Package can be installed by adding `tower_sentry` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -14,10 +17,6 @@ def deps do
   ]
 end
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/tower_sentry>.
 
 ## License
 
