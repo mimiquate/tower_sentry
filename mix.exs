@@ -26,7 +26,7 @@ defmodule TowerSentry.MixProject do
   defp deps do
     [
       {:tower, "~> 0.5.1"},
-      {:sentry, "~> 10.6"},
+      {:sentry, "~> 10.5"},
 
       # Optional
       {:jason, "~> 1.4", optional: true},
