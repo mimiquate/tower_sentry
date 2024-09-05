@@ -98,18 +98,16 @@ defmodule TowerSentryTest do
             "message" => %{
               "formatted" => "(throw) something"
             },
-            "threads" => [thread]
+            "threads" => [%{"stacktrace" => %{"frames" => frames}}]
           }
         } = Jason.decode(event)
       )
-
-      assert %{"stacktrace" => %{"frames" => frames}} = thread
 
       assert(
         %{
           "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports throw"/1),
           "filename" => "test/tower_sentry_test.exs",
-          "lineno" => 125
+          "lineno" => 123
         } = List.last(frames)
       )
 
@@ -150,18 +148,16 @@ defmodule TowerSentryTest do
             "message" => %{
               "formatted" => "(exit) :abnormal"
             },
-            "threads" => [thread]
+            "threads" => [%{"stacktrace" => %{"frames" => frames}}]
           }
         } = Jason.decode(event)
       )
-
-      assert %{"stacktrace" => %{"frames" => frames}} = thread
 
       assert(
         %{
           "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports abnormal exit"/1),
           "filename" => "test/tower_sentry_test.exs",
-          "lineno" => 177
+          "lineno" => 173
         } = List.last(frames)
       )
 
@@ -268,7 +264,7 @@ defmodule TowerSentryTest do
             "message" => %{
               "formatted" => "(throw) from inside a plug"
             },
-            "threads" => [thread],
+            "threads" => [%{"stacktrace" => %{"frames" => frames}}],
             "request" => %{
               "method" => "GET",
               "url" => ^url
@@ -276,8 +272,6 @@ defmodule TowerSentryTest do
           }
         } = Jason.decode(event)
       )
-
-      assert %{"stacktrace" => %{"frames" => frames}} = thread
 
       assert(
         %{
