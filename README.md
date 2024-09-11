@@ -4,7 +4,9 @@
 [![Hex.pm](https://img.shields.io/hexpm/v/tower_sentry.svg)](https://hex.pm/packages/tower_sentry)
 [![Documentation](https://img.shields.io/badge/Documentation-purple.svg)](https://hexdocs.pm/tower_sentry)
 
-[Tower](https://github.com/mimiquate/tower) reporter for [Sentry](https://sentry.io).
+Elixir error tracking and reporting to [Sentry](https://sentry.io).
+
+[Tower](https://github.com/mimiquate/tower) reporter for Sentry.
 
 ## Installation
 
