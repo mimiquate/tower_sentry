@@ -7,6 +7,8 @@ defmodule TowerSentry.Sentry.Event do
         plug_conn: plug_conn,
         metadata: metadata
       }) do
+    put_environment_name()
+
     Sentry.Event.create_event(
       exception: exception,
       stacktrace: stacktrace,
@@ -23,6 +25,8 @@ defmodule TowerSentry.Sentry.Event do
         plug_conn: plug_conn,
         metadata: metadata
       }) do
+    put_environment_name()
+
     Sentry.Event.create_event(
       message: "(throw) #{reason}",
       stacktrace: stacktrace,
@@ -40,6 +44,8 @@ defmodule TowerSentry.Sentry.Event do
         plug_conn: plug_conn,
         metadata: metadata
       }) do
+    put_environment_name()
+
     Sentry.Event.create_event(
       message: "(exit) #{inspect(reason)}",
       stacktrace: stacktrace,
@@ -56,6 +62,8 @@ defmodule TowerSentry.Sentry.Event do
         id: id,
         metadata: metadata
       }) do
+    put_environment_name()
+
     # TODO: Include plug conn data if available
     Sentry.Event.create_event(
       message:
@@ -91,5 +99,12 @@ defmodule TowerSentry.Sentry.Event do
     end
   else
     defp request_data(_), do: %{}
+  end
+
+  defp put_environment_name do
+    Sentry.put_config(
+      :environment_name,
+      Application.fetch_env!(:tower_sentry, :environment_name)
+    )
   end
 end

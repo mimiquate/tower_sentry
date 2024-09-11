@@ -56,13 +56,9 @@ And finally configure `:sentry` dsn.
 # config/runtime.exs
 
 if config_env() == :prod do
-  config :sentry, dsn: System.get_env("SENTRY_DSN")
+  config :tower_sentry, dsn: System.get_env("SENTRY_DSN")
 end
 ```
-
-Note that `tower_sentry` uses `tower` to capture errors and `sentry` package to report remotely to Sentry servers.
-So any `sentry` package configuration that affects it's capturing behavior won't have any effect when using it
-via `tower_sentry`.
 
 That's it.
 

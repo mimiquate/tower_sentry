@@ -13,6 +13,6 @@ defmodule TowerSentry.Reporter do
   end
 
   defp enabled? do
-    Sentry.Config.dsn()
+    !!Application.get_env(:tower_sentry, :dsn)
   end
 end
