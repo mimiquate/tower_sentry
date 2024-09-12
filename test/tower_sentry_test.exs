@@ -200,7 +200,8 @@ defmodule TowerSentryTest do
             "exception" => [exception],
             "request" => %{
               "method" => "GET",
-              "url" => ^url
+              "url" => ^url,
+              "headers" => %{"user-agent" => "httpc client"}
             }
           }
         } = Jason.decode(event)
@@ -267,7 +268,8 @@ defmodule TowerSentryTest do
             "threads" => [%{"stacktrace" => %{"frames" => frames}}],
             "request" => %{
               "method" => "GET",
-              "url" => ^url
+              "url" => ^url,
+              "headers" => %{"user-agent" => "httpc client"}
             }
           }
         } = Jason.decode(event)
@@ -326,7 +328,8 @@ defmodule TowerSentryTest do
             "threads" => [%{"stacktrace" => stacktrace}],
             "request" => %{
               "method" => "GET",
-              "url" => ^url
+              "url" => ^url,
+              "headers" => %{"user-agent" => "httpc client"}
             }
           }
         } = Jason.decode(event)
@@ -376,7 +379,8 @@ defmodule TowerSentryTest do
             "exception" => [exception],
             "request" => %{
               "method" => "GET",
-              "url" => ^url
+              "url" => ^url,
+              "headers" => %{"user-agent" => "httpc client"}
             }
           }
         } = Jason.decode(event)
