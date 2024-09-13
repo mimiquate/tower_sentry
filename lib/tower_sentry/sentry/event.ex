@@ -65,11 +65,11 @@ defmodule TowerSentry.Sentry.Event do
         level: level,
         reason: message,
         id: id,
+        plug_conn: plug_conn,
         metadata: metadata
       }) do
     put_environment_name()
 
-    # TODO: Include plug conn data if available
     Sentry.Event.create_event(
       message:
         if is_binary(message) do
@@ -79,6 +79,7 @@ defmodule TowerSentry.Sentry.Event do
         end,
       level: level,
       user: user_data(metadata),
+      request: request_data(plug_conn),
       extra: %{id: id, metadata: metadata}
     )
   end
