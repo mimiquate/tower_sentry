@@ -468,7 +468,7 @@ defmodule TowerSentryTest do
     _ = :sys.get_state(Sentry.Dedupe)
   end
 
-  # sentry-elixir 10.4
+  # sentry-elixir 10.3 and 10.4
   defp empty_stacktrace?(%{"frames" => []}), do: true
   # sentry-elixir 10.5 and 10.6
   defp empty_stacktrace?(nil), do: true

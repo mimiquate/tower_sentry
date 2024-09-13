@@ -33,7 +33,7 @@ defmodule TowerSentry.MixProject do
   defp deps do
     [
       {:tower, "~> 0.5.0"},
-      {:sentry, "~> 10.4"},
+      {:sentry, "~> 10.3"},
 
       # Dev
       {:ex_doc, "~> 0.34.2", only: :dev, runtime: false},

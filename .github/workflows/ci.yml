@@ -22,6 +22,9 @@ jobs:
           - elixir: '1.15'
             erlang: '24.3.4.17'
             blend: sentry_10_4
+          - elixir: '1.15'
+            erlang: '24.3.4.17'
+            blend: sentry_10_3
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
