@@ -15,7 +15,7 @@ Package can be installed by adding `tower_sentry` to your list of dependencies i
 ```elixir
 def deps do
   [
-    {:tower_sentry, "~> 0.2.0"}
+    {:tower_sentry, "~> 0.2.1"}
   ]
 end
 ```
