@@ -16,8 +16,8 @@ jobs:
           - elixir: '1.16'
             erlang: '26.2.5.3'
             blend: sentry_10_6
-          - elixir: '1.16'
-            erlang: '26.2.5.3'
+          - elixir: '1.15'
+            erlang: '25.3.2.13'
             blend: sentry_10_5
     steps:
       - uses: actions/checkout@v4
