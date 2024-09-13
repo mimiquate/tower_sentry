@@ -15,6 +15,7 @@ defmodule TowerSentry.Sentry.Event do
       exception: exception,
       stacktrace: stacktrace,
       request: request_data(plug_conn),
+      user: user_data(metadata),
       extra: %{id: id, metadata: metadata}
     )
   end
@@ -34,6 +35,7 @@ defmodule TowerSentry.Sentry.Event do
       stacktrace: stacktrace,
       level: :error,
       request: request_data(plug_conn),
+      user: user_data(metadata),
       extra: %{id: id, metadata: metadata}
     )
   end
@@ -53,6 +55,7 @@ defmodule TowerSentry.Sentry.Event do
       stacktrace: stacktrace,
       level: :error,
       request: request_data(plug_conn),
+      user: user_data(metadata),
       extra: %{id: id, metadata: metadata}
     )
   end
@@ -75,9 +78,16 @@ defmodule TowerSentry.Sentry.Event do
           inspect(message)
         end,
       level: level,
+      user: user_data(metadata),
       extra: %{id: id, metadata: metadata}
     )
   end
+
+  defp user_data(%{user_id: id}) do
+    %{id: id}
+  end
+
+  defp user_data(_), do: %{}
 
   if Code.ensure_loaded?(Plug.Conn) do
     @reported_request_headers ["user-agent"]
