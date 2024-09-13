@@ -1,4 +1,12 @@
 defmodule TowerSentry.Reporter do
+  @moduledoc """
+  The reporter module that needs to be added to the list of Tower reporters.
+
+  ## Example
+
+      config :tower, :reporters, [TowerSentry.Reporter]
+  """
+
   @behaviour Tower.Reporter
 
   @impl true

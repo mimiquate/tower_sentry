@@ -14,7 +14,12 @@ defmodule TowerSentry.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      package: package()
+      package: package(),
+
+      # Docs
+      name: "TowerSentry",
+      source_url: @source_url,
+      docs: docs()
     ]
   end
 
@@ -54,6 +59,13 @@ defmodule TowerSentry.MixProject do
       links: %{
         "GitHub" => @source_url
       }
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      extras: ["README.md"]
     ]
   end
 end

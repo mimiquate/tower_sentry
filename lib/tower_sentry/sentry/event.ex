@@ -1,4 +1,6 @@
 defmodule TowerSentry.Sentry.Event do
+  @moduledoc false
+
   def from_tower_event(%Tower.Event{
         kind: :error,
         reason: exception,
