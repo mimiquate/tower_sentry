@@ -25,11 +25,7 @@ defmodule TowerSentryTest do
 
   test "reports arithmetic error", %{bypass: bypass} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
-
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
-
+      expect_event_once(bypass, fn event ->
         assert(
           {
             :ok,
@@ -53,15 +49,11 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports arithmetic error"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 69
+            "lineno" => 61
           } = List.last(frames)
         )
 
         done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
       capture_log(fn ->
@@ -74,11 +66,7 @@ defmodule TowerSentryTest do
 
   test "reports throw", %{bypass: bypass} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
-
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
-
+      expect_event_once(bypass, fn event ->
         assert(
           {
             :ok,
@@ -98,15 +86,11 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports throw"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 114
+            "lineno" => 98
           } = List.last(frames)
         )
 
         done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
       capture_log(fn ->
@@ -119,11 +103,7 @@ defmodule TowerSentryTest do
 
   test "reports abnormal exit", %{bypass: bypass} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
-
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
-
+      expect_event_once(bypass, fn event ->
         assert(
           {
             :ok,
@@ -143,15 +123,11 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports abnormal exit"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 159
+            "lineno" => 135
           } = List.last(frames)
         )
 
         done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
       capture_log(fn ->
@@ -168,11 +144,7 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/arithmetic-error"
 
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
-
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
-
+      expect_event_once(bypass, fn event ->
         assert(
           {
             :ok,
@@ -206,10 +178,6 @@ defmodule TowerSentryTest do
         )
 
         done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
       start_supervised!(
@@ -228,11 +196,7 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/uncaught-throw"
 
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
-
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
-
+      expect_event_once(bypass, fn event ->
         assert(
           {
             :ok,
@@ -262,10 +226,6 @@ defmodule TowerSentryTest do
         )
 
         done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
       start_supervised!(
@@ -284,11 +244,7 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/abnormal-exit"
 
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
-
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
-
+      expect_event_once(bypass, fn event ->
         assert(
           {
             :ok,
@@ -313,10 +269,6 @@ defmodule TowerSentryTest do
         assert empty_stacktrace?(stacktrace)
 
         done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
       start_supervised!(
@@ -335,11 +287,7 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/arithmetic-error"
 
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
-
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
-
+      expect_event_once(bypass, fn event ->
         assert(
           {
             :ok,
@@ -373,10 +321,6 @@ defmodule TowerSentryTest do
         )
 
         done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
       capture_log(fn ->
@@ -391,11 +335,7 @@ defmodule TowerSentryTest do
 
   test "reports message", %{bypass: bypass} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
-
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
-
+      expect_event_once(bypass, fn event ->
         assert(
           {
             :ok,
@@ -411,10 +351,6 @@ defmodule TowerSentryTest do
         )
 
         done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
       Tower.handle_message(:info, "something interesting happened")
@@ -454,5 +390,24 @@ defmodule TowerSentryTest do
     end)
 
     assert_receive({^ref, :sent}, 500)
+  end
+
+  defp expect_event_once(bypass, fun) do
+    Bypass.expect_once(
+      bypass,
+      "POST",
+      "/api/1/envelope",
+      fn conn ->
+        {:ok, body, conn} = Plug.Conn.read_body(conn)
+
+        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+
+        fun.(event)
+
+        conn
+        |> Plug.Conn.put_resp_content_type("application/json")
+        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+      end
+    )
   end
 end
