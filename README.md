@@ -32,7 +32,7 @@ config(
   :reporters,
   [
     # along any other possible reporters
-    TowerSentry.Reporter
+    TowerSentry
   ]
 )
 ```

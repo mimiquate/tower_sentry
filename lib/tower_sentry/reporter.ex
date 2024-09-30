@@ -1,15 +1,6 @@
 defmodule TowerSentry.Reporter do
-  @moduledoc """
-  The reporter module that needs to be added to the list of Tower reporters.
+  @moduledoc false
 
-  ## Example
-
-      config :tower, :reporters, [TowerSentry.Reporter]
-  """
-
-  @behaviour Tower.Reporter
-
-  @impl true
   def report_event(%Tower.Event{} = tower_event) do
     if enabled?() do
       tower_event

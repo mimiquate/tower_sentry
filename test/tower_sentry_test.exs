@@ -10,7 +10,7 @@ defmodule TowerSentryTest do
     Application.put_env(:tower_sentry, :dsn, "http://public:secret@localhost:#{bypass.port}/1")
     Application.put_env(:tower_sentry, :environment_name, :test)
     Sentry.put_config(:send_result, :sync)
-    Application.put_env(:tower, :reporters, [TowerSentry.Reporter])
+    Application.put_env(:tower, :reporters, [TowerSentry])
 
     on_exit(fn ->
       reset_sentry_dedupe()
