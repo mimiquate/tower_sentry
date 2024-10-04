@@ -37,7 +37,7 @@ defmodule TowerSentry.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:tower, "~> 0.5.0"},
+      {:tower, "~> 0.6.0"},
       {:sentry, "~> 10.3"},
 
       # Dev

@@ -11,10 +11,8 @@ defmodule TowerSentryTest do
     Application.put_env(:tower_sentry, :environment_name, :test)
     Sentry.put_config(:send_result, :sync)
     Application.put_env(:tower, :reporters, [TowerSentry.Reporter])
-    Tower.attach()
 
     on_exit(fn ->
-      Tower.detach()
       reset_sentry_dedupe()
       Application.put_env(:tower_sentry, :dsn, nil)
       Sentry.put_config(:send_result, :none)
@@ -53,7 +51,7 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports arithmetic error"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 69
+            "lineno" => 67
           } = List.last(frames)
         )
 
@@ -98,7 +96,7 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports throw"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 114
+            "lineno" => 112
           } = List.last(frames)
         )
 
@@ -143,7 +141,7 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports abnormal exit"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 159
+            "lineno" => 157
           } = List.last(frames)
         )
 

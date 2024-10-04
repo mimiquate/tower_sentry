@@ -22,20 +22,7 @@ end
 
 ## Usage
 
-First, attach `Tower` to automatically capture errors.
-
-```elixir
-# lib/<your_app>/application.ex
-
-defmodule YourApp.Application do
-  def start(_type, _args) do
-    Tower.attach()
-
-    # rest of your code
-  end
-```
-
-Then tell `Tower` to inform `TowerSentry` reporter about them.
+Tell `Tower` to inform `TowerSentry` reporter about errors.
 
 ```elixir
 # config/config.exs
@@ -50,7 +37,7 @@ config(
 )
 ```
 
-And finally configure `:sentry` dsn.
+And configure `:sentry` dsn.
 
 ```elixir
 # config/runtime.exs
