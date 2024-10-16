@@ -64,7 +64,7 @@ try do
   # possibly crashing code
 rescue
   exception ->
-    Tower.handle_exception(exception, __STACKTRACE__)
+    Tower.report_exception(exception, __STACKTRACE__)
 end
 ```
 

@@ -415,7 +415,7 @@ defmodule TowerSentryTest do
         |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
       end)
 
-      Tower.handle_message(:info, "something interesting happened")
+      Tower.report_message(:info, "something interesting happened")
     end)
   end
 
