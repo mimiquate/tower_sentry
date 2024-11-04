@@ -297,7 +297,7 @@ defmodule TowerSentryTest do
               "message" => %{
                 "formatted" => "(exit) :abnormal"
               },
-              "threads" => [%{"stacktrace" => stacktrace}],
+              "threads" => [thread],
               "request" => %{
                 "method" => "GET",
                 "url" => ^url,
@@ -308,7 +308,7 @@ defmodule TowerSentryTest do
         )
 
         # Plug.Cowboy doesn't provide stacktrace for exits
-        assert empty_stacktrace?(stacktrace)
+        assert empty_stacktrace?(Map.get(thread, "stacktrace"))
 
         done.()
 
@@ -434,7 +434,7 @@ defmodule TowerSentryTest do
 
   # sentry-elixir 10.3 and 10.4
   defp empty_stacktrace?(%{"frames" => []}), do: true
-  # sentry-elixir 10.5 and 10.6
+  # sentry-elixir 10.5, 10.6 and 10.8
   defp empty_stacktrace?(nil), do: true
   # sentry-elixir 10.7
   # https://github.com/getsentry/sentry-elixir/pull/775
