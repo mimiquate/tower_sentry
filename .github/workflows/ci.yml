@@ -13,10 +13,13 @@ jobs:
           - elixir: '1.17'
             erlang: '27.0.1'
             lint: true
-          - elixir: '1.16'
+          - elixir: '1.17'
             erlang: '26.2.5.3'
+            blend: sentry_10_7
+          - elixir: '1.16'
+            erlang: '25.3.2.13'
             blend: sentry_10_6
-          - elixir: '1.15'
+          - elixir: '1.16'
             erlang: '25.3.2.13'
             blend: sentry_10_5
           - elixir: '1.15'
