@@ -22,7 +22,7 @@ defmodule TowerSentry.Sentry.Event do
 
   def from_tower_event(%Tower.Event{
         kind: :throw,
-        reason: reason,
+        reason: value,
         stacktrace: stacktrace,
         id: id,
         plug_conn: plug_conn,
@@ -31,7 +31,7 @@ defmodule TowerSentry.Sentry.Event do
     put_environment_name()
 
     Sentry.Event.create_event(
-      message: "(throw) #{reason}",
+      message: "(throw) #{inspect(value)}",
       stacktrace: stacktrace,
       level: :error,
       request: request_data(plug_conn),

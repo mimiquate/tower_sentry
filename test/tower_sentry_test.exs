@@ -85,7 +85,7 @@ defmodule TowerSentryTest do
               "environment" => "test",
               "exception" => [],
               "message" => %{
-                "formatted" => "(throw) something"
+                "formatted" => "(throw) \"something\""
               },
               "threads" => [%{"stacktrace" => %{"frames" => frames}}]
             }
@@ -239,7 +239,7 @@ defmodule TowerSentryTest do
               "environment" => "test",
               "exception" => [],
               "message" => %{
-                "formatted" => "(throw) from inside a plug"
+                "formatted" => "(throw) \"from inside a plug\""
               },
               "threads" => [%{"stacktrace" => %{"frames" => frames}}],
               "request" => %{
