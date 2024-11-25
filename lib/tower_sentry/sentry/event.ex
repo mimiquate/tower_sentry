@@ -1,19 +1,22 @@
 defmodule TowerSentry.Sentry.Event do
   @moduledoc false
 
-  def from_tower_event(%Tower.Event{
-        kind: :error,
-        reason: exception,
-        stacktrace: stacktrace,
-        id: id,
-        plug_conn: plug_conn,
-        metadata: metadata
-      }) do
+  def from_tower_event(
+        %Tower.Event{
+          kind: :error,
+          reason: exception,
+          stacktrace: stacktrace,
+          id: id,
+          plug_conn: plug_conn,
+          metadata: metadata
+        } = event
+      ) do
     put_environment_name()
 
     Sentry.Event.create_event(
       exception: exception,
       stacktrace: stacktrace,
+      handled: manual_report?(event),
       request: request_data(plug_conn),
       user: user_data(metadata),
       extra: %{id: id, metadata: metadata}
@@ -120,4 +123,7 @@ defmodule TowerSentry.Sentry.Event do
       Application.fetch_env!(:tower_sentry, :environment_name)
     )
   end
+
+  defp manual_report?(%{by: nil}), do: true
+  defp manual_report?(_), do: false
 end
