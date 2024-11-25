@@ -43,7 +43,10 @@ defmodule TowerSentryTest do
           %{
             "type" => "ArithmeticError",
             "value" => "bad argument in arithmetic expression",
-            "stacktrace" => %{"frames" => frames}
+            "stacktrace" => %{"frames" => frames},
+            "mechanism" => %{
+              "handled" => false
+            }
           } = exception
         )
 
@@ -51,7 +54,7 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports arithmetic error"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 67
+            "lineno" => 70
           } = List.last(frames)
         )
 
@@ -96,7 +99,7 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports throw"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 112
+            "lineno" => 115
           } = List.last(frames)
         )
 
@@ -141,7 +144,7 @@ defmodule TowerSentryTest do
           %{
             "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports abnormal exit"/1),
             "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 157
+            "lineno" => 160
           } = List.last(frames)
         )
 
