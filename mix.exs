@@ -37,7 +37,7 @@ defmodule TowerSentry.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:tower, "~> 0.7.1"},
+      {:tower, github: "mimiquate/tower", branch: "sync"},
       {:sentry, "~> 10.3"},
 
       # Dev
