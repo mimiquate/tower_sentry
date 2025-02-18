@@ -15,16 +15,9 @@ jobs:
             lint: true
           - elixir: '1.17'
             erlang: '26.2.5.6'
-            blend: sentry_10_7
           - elixir: '1.16'
             erlang: '25.3.2.16'
-            blend: sentry_10_6
-          - elixir: '1.16'
-            erlang: '25.3.2.16'
-            blend: sentry_10_5
-          - elixir: '1.15'
-            erlang: '24.3.4.17'
-            blend: sentry_10_4
+            blend: tower_0_7
           - elixir: '1.15'
             erlang: '24.3.4.17'
             blend: sentry_10_3
