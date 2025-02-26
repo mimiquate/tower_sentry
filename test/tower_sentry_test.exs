@@ -5,9 +5,9 @@ defmodule TowerSentryTest do
   import ExUnit.CaptureLog, only: [capture_log: 1]
 
   setup do
-    bypass = Bypass.open()
+    {:ok, bypass} = TestServer.start()
 
-    Application.put_env(:tower_sentry, :dsn, "http://public:secret@localhost:#{bypass.port}/1")
+    Application.put_env(:tower_sentry, :dsn, TestServer.url(bypass, "/1", host: "public:secret@localhost"))
     Application.put_env(:tower_sentry, :environment_name, :test)
     Sentry.put_config(:send_result, :sync)
     Application.put_env(:tower, :reporters, [TowerSentry])
@@ -23,7 +23,7 @@ defmodule TowerSentryTest do
 
   test "reports arithmetic error", %{bypass: bypass} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
+      TestServer.add(bypass, "/api/1/envelope", via: :post, to: fn conn ->
         {:ok, body, conn} = Plug.Conn.read_body(conn)
 
         assert [_id, _header, event] = String.split(body, "\n", trim: true)
@@ -73,7 +73,7 @@ defmodule TowerSentryTest do
 
   test "reports throw", %{bypass: bypass} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
+      TestServer.add(bypass, "/api/1/envelope", via: :post, to: fn conn ->
         {:ok, body, conn} = Plug.Conn.read_body(conn)
 
         assert [_id, _header, event] = String.split(body, "\n", trim: true)
@@ -118,7 +118,7 @@ defmodule TowerSentryTest do
 
   test "reports abnormal exit", %{bypass: bypass} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
+      TestServer.add(bypass, "/api/1/envelope", via: :post, to: fn conn ->
         {:ok, body, conn} = Plug.Conn.read_body(conn)
 
         assert [_id, _header, event] = String.split(body, "\n", trim: true)
@@ -167,7 +167,7 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/arithmetic-error"
 
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
+      TestServer.add(bypass, "/api/1/envelope", via: :post, to: fn conn ->
         {:ok, body, conn} = Plug.Conn.read_body(conn)
 
         assert [_id, _header, event] = String.split(body, "\n", trim: true)
@@ -228,7 +228,7 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/uncaught-throw"
 
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
+      TestServer.add(bypass, "/api/1/envelope", via: :post, to: fn conn ->
         {:ok, body, conn} = Plug.Conn.read_body(conn)
 
         assert [_id, _header, event] = String.split(body, "\n", trim: true)
@@ -284,7 +284,7 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/abnormal-exit"
 
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
+      TestServer.add(bypass, "/api/1/envelope", via: :post, to: fn conn ->
         {:ok, body, conn} = Plug.Conn.read_body(conn)
 
         assert [_id, _header, event] = String.split(body, "\n", trim: true)
@@ -335,7 +335,7 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/arithmetic-error"
 
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
+      TestServer.add(bypass, "/api/1/envelope", via: :post, to: fn conn ->
         {:ok, body, conn} = Plug.Conn.read_body(conn)
 
         assert [_id, _header, event] = String.split(body, "\n", trim: true)
@@ -392,7 +392,7 @@ defmodule TowerSentryTest do
 
   test "reports message", %{bypass: bypass} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/api/1/envelope", fn conn ->
+      TestServer.add(bypass, "/api/1/envelope", via: :post, to: fn conn ->
         {:ok, body, conn} = Plug.Conn.read_body(conn)
 
         assert [_id, _header, event] = String.split(body, "\n", trim: true)
