@@ -47,7 +47,7 @@ defmodule TowerSentry.MixProject do
       # Test
       {:jason, "~> 1.4", only: :test},
       {:hackney, "~> 1.20", only: :test},
-      {:bypass, "~> 2.1", only: :test},
+      {:test_server, "~> 0.1.18", only: :test},
       {:plug_cowboy, "~> 2.7", only: :test},
       {:bandit, "~> 1.5", only: :test}
     ]
