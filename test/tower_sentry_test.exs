@@ -7,7 +7,12 @@ defmodule TowerSentryTest do
   setup do
     {:ok, _test_server} = TestServer.start()
 
-    Application.put_env(:tower_sentry, :dsn, TestServer.url("/1", host: "public:secret@localhost"))
+    Application.put_env(
+      :tower_sentry,
+      :dsn,
+      TestServer.url("/1", host: "public:secret@localhost")
+    )
+
     Application.put_env(:tower_sentry, :environment_name, :test)
     Sentry.put_config(:send_result, :sync)
     Application.put_env(:tower, :reporters, [TowerSentry])
@@ -21,45 +26,50 @@ defmodule TowerSentryTest do
 
   test "reports arithmetic error" do
     waiting_for(fn done ->
-      TestServer.add("/api/1/envelope", via: :post, to: fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+          assert [_id, _header, event] = String.split(body, "\n", trim: true)
 
-        assert(
-          {
-            :ok,
+          assert(
+            {
+              :ok,
+              %{
+                "level" => "error",
+                "environment" => "test",
+                "exception" => [exception]
+              }
+            } = Jason.decode(event)
+          )
+
+          assert(
             %{
-              "level" => "error",
-              "environment" => "test",
-              "exception" => [exception]
-            }
-          } = Jason.decode(event)
-        )
+              "type" => "ArithmeticError",
+              "value" => "bad argument in arithmetic expression",
+              "stacktrace" => %{"frames" => frames},
+              "mechanism" => %{"handled" => false}
+            } = exception
+          )
 
-        assert(
-          %{
-            "type" => "ArithmeticError",
-            "value" => "bad argument in arithmetic expression",
-            "stacktrace" => %{"frames" => frames},
-            "mechanism" => %{"handled" => false}
-          } = exception
-        )
+          assert(
+            %{
+              "function" =>
+                ~s(anonymous fn/0 in TowerSentryTest."test reports arithmetic error"/1),
+              "filename" => "test/tower_sentry_test.exs",
+              "lineno" => 76
+            } = List.last(frames)
+          )
 
-        assert(
-          %{
-            "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports arithmetic error"/1),
-            "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 66
-          } = List.last(frames)
-        )
+          done.()
 
-        done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        end
+      )
 
       capture_log(fn ->
         in_unlinked_process(fn ->
@@ -71,40 +81,44 @@ defmodule TowerSentryTest do
 
   test "reports throw" do
     waiting_for(fn done ->
-      TestServer.add("/api/1/envelope", via: :post, to: fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+          assert [_id, _header, event] = String.split(body, "\n", trim: true)
 
-        assert(
-          {
-            :ok,
+          assert(
+            {
+              :ok,
+              %{
+                "level" => "error",
+                "environment" => "test",
+                "exception" => [],
+                "message" => %{
+                  "formatted" => "(throw) \"something\""
+                },
+                "threads" => [%{"stacktrace" => %{"frames" => frames}}]
+              }
+            } = Jason.decode(event)
+          )
+
+          assert(
             %{
-              "level" => "error",
-              "environment" => "test",
-              "exception" => [],
-              "message" => %{
-                "formatted" => "(throw) \"something\""
-              },
-              "threads" => [%{"stacktrace" => %{"frames" => frames}}]
-            }
-          } = Jason.decode(event)
-        )
+              "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports throw"/1),
+              "filename" => "test/tower_sentry_test.exs",
+              "lineno" => 125
+            } = List.last(frames)
+          )
 
-        assert(
-          %{
-            "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports throw"/1),
-            "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 111
-          } = List.last(frames)
-        )
+          done.()
 
-        done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        end
+      )
 
       capture_log(fn ->
         in_unlinked_process(fn ->
@@ -116,40 +130,44 @@ defmodule TowerSentryTest do
 
   test "reports abnormal exit" do
     waiting_for(fn done ->
-      TestServer.add("/api/1/envelope", via: :post, to: fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+          assert [_id, _header, event] = String.split(body, "\n", trim: true)
 
-        assert(
-          {
-            :ok,
+          assert(
+            {
+              :ok,
+              %{
+                "level" => "error",
+                "environment" => "test",
+                "exception" => [],
+                "message" => %{
+                  "formatted" => "(exit) :abnormal"
+                },
+                "threads" => [%{"stacktrace" => %{"frames" => frames}}]
+              }
+            } = Jason.decode(event)
+          )
+
+          assert(
             %{
-              "level" => "error",
-              "environment" => "test",
-              "exception" => [],
-              "message" => %{
-                "formatted" => "(exit) :abnormal"
-              },
-              "threads" => [%{"stacktrace" => %{"frames" => frames}}]
-            }
-          } = Jason.decode(event)
-        )
+              "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports abnormal exit"/1),
+              "filename" => "test/tower_sentry_test.exs",
+              "lineno" => 174
+            } = List.last(frames)
+          )
 
-        assert(
-          %{
-            "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports abnormal exit"/1),
-            "filename" => "test/tower_sentry_test.exs",
-            "lineno" => 156
-          } = List.last(frames)
-        )
+          done.()
 
-        done.()
-
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        end
+      )
 
       capture_log(fn ->
         in_unlinked_process(fn ->
@@ -165,50 +183,54 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/arithmetic-error"
 
-      TestServer.add("/api/1/envelope", via: :post, to: fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+          assert [_id, _header, event] = String.split(body, "\n", trim: true)
 
-        assert(
-          {
-            :ok,
-            %{
-              "level" => "error",
-              "environment" => "test",
-              "exception" => [exception],
-              "request" => %{
-                "method" => "GET",
-                "url" => ^url,
-                "headers" => %{"user-agent" => "httpc client"}
+          assert(
+            {
+              :ok,
+              %{
+                "level" => "error",
+                "environment" => "test",
+                "exception" => [exception],
+                "request" => %{
+                  "method" => "GET",
+                  "url" => ^url,
+                  "headers" => %{"user-agent" => "httpc client"}
+                }
               }
-            }
-          } = Jason.decode(event)
-        )
+            } = Jason.decode(event)
+          )
 
-        assert(
-          %{
-            "type" => "ArithmeticError",
-            "value" => "bad argument in arithmetic expression",
-            "stacktrace" => %{"frames" => frames},
-            "mechanism" => %{"handled" => false}
-          } = exception
-        )
+          assert(
+            %{
+              "type" => "ArithmeticError",
+              "value" => "bad argument in arithmetic expression",
+              "stacktrace" => %{"frames" => frames},
+              "mechanism" => %{"handled" => false}
+            } = exception
+          )
 
-        assert(
-          %{
-            "function" => "anonymous fn/2 in TowerSentry.ErrorTestPlug.do_match/4",
-            "filename" => "test/support/error_test_plug.ex",
-            "lineno" => 8
-          } = List.last(frames)
-        )
+          assert(
+            %{
+              "function" => "anonymous fn/2 in TowerSentry.ErrorTestPlug.do_match/4",
+              "filename" => "test/support/error_test_plug.ex",
+              "lineno" => 8
+            } = List.last(frames)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        end
+      )
 
       start_supervised!(
         {Plug.Cowboy, plug: TowerSentry.ErrorTestPlug, scheme: :http, port: plug_port}
@@ -226,45 +248,49 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/uncaught-throw"
 
-      TestServer.add("/api/1/envelope", via: :post, to: fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+          assert [_id, _header, event] = String.split(body, "\n", trim: true)
 
-        assert(
-          {
-            :ok,
-            %{
-              "level" => "error",
-              "environment" => "test",
-              "exception" => [],
-              "message" => %{
-                "formatted" => "(throw) \"from inside a plug\""
-              },
-              "threads" => [%{"stacktrace" => %{"frames" => frames}}],
-              "request" => %{
-                "method" => "GET",
-                "url" => ^url,
-                "headers" => %{"user-agent" => "httpc client"}
+          assert(
+            {
+              :ok,
+              %{
+                "level" => "error",
+                "environment" => "test",
+                "exception" => [],
+                "message" => %{
+                  "formatted" => "(throw) \"from inside a plug\""
+                },
+                "threads" => [%{"stacktrace" => %{"frames" => frames}}],
+                "request" => %{
+                  "method" => "GET",
+                  "url" => ^url,
+                  "headers" => %{"user-agent" => "httpc client"}
+                }
               }
-            }
-          } = Jason.decode(event)
-        )
+            } = Jason.decode(event)
+          )
 
-        assert(
-          %{
-            "function" => "anonymous fn/2 in TowerSentry.ErrorTestPlug.do_match/4",
-            "filename" => "test/support/error_test_plug.ex",
-            "lineno" => 14
-          } = List.last(frames)
-        )
+          assert(
+            %{
+              "function" => "anonymous fn/2 in TowerSentry.ErrorTestPlug.do_match/4",
+              "filename" => "test/support/error_test_plug.ex",
+              "lineno" => 14
+            } = List.last(frames)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        end
+      )
 
       start_supervised!(
         {Plug.Cowboy, plug: TowerSentry.ErrorTestPlug, scheme: :http, port: plug_port}
@@ -282,40 +308,44 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/abnormal-exit"
 
-      TestServer.add("/api/1/envelope", via: :post, to: fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+          assert [_id, _header, event] = String.split(body, "\n", trim: true)
 
-        assert(
-          {
-            :ok,
-            %{
-              "level" => "error",
-              "environment" => "test",
-              "exception" => [],
-              "message" => %{
-                "formatted" => "(exit) :abnormal"
-              },
-              "threads" => [thread],
-              "request" => %{
-                "method" => "GET",
-                "url" => ^url,
-                "headers" => %{"user-agent" => "httpc client"}
+          assert(
+            {
+              :ok,
+              %{
+                "level" => "error",
+                "environment" => "test",
+                "exception" => [],
+                "message" => %{
+                  "formatted" => "(exit) :abnormal"
+                },
+                "threads" => [thread],
+                "request" => %{
+                  "method" => "GET",
+                  "url" => ^url,
+                  "headers" => %{"user-agent" => "httpc client"}
+                }
               }
-            }
-          } = Jason.decode(event)
-        )
+            } = Jason.decode(event)
+          )
 
-        # Plug.Cowboy doesn't provide stacktrace for exits
-        assert empty_stacktrace?(Map.get(thread, "stacktrace"))
+          # Plug.Cowboy doesn't provide stacktrace for exits
+          assert empty_stacktrace?(Map.get(thread, "stacktrace"))
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        end
+      )
 
       start_supervised!(
         {Plug.Cowboy, plug: TowerSentry.ErrorTestPlug, scheme: :http, port: plug_port}
@@ -333,50 +363,54 @@ defmodule TowerSentryTest do
       plug_port = 51111
       url = "http://127.0.0.1:#{plug_port}/arithmetic-error"
 
-      TestServer.add("/api/1/envelope", via: :post, to: fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+          assert [_id, _header, event] = String.split(body, "\n", trim: true)
 
-        assert(
-          {
-            :ok,
-            %{
-              "level" => "error",
-              "environment" => "test",
-              "exception" => [exception],
-              "request" => %{
-                "method" => "GET",
-                "url" => ^url,
-                "headers" => %{"user-agent" => "httpc client"}
+          assert(
+            {
+              :ok,
+              %{
+                "level" => "error",
+                "environment" => "test",
+                "exception" => [exception],
+                "request" => %{
+                  "method" => "GET",
+                  "url" => ^url,
+                  "headers" => %{"user-agent" => "httpc client"}
+                }
               }
-            }
-          } = Jason.decode(event)
-        )
+            } = Jason.decode(event)
+          )
 
-        assert(
-          %{
-            "type" => "ArithmeticError",
-            "value" => "bad argument in arithmetic expression",
-            "stacktrace" => %{"frames" => frames},
-            "mechanism" => %{"handled" => false}
-          } = exception
-        )
+          assert(
+            %{
+              "type" => "ArithmeticError",
+              "value" => "bad argument in arithmetic expression",
+              "stacktrace" => %{"frames" => frames},
+              "mechanism" => %{"handled" => false}
+            } = exception
+          )
 
-        assert(
-          %{
-            "function" => "anonymous fn/2 in TowerSentry.ErrorTestPlug.do_match/4",
-            "filename" => "test/support/error_test_plug.ex",
-            "lineno" => 8
-          } = List.last(frames)
-        )
+          assert(
+            %{
+              "function" => "anonymous fn/2 in TowerSentry.ErrorTestPlug.do_match/4",
+              "filename" => "test/support/error_test_plug.ex",
+              "lineno" => 8
+            } = List.last(frames)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        end
+      )
 
       capture_log(fn ->
         start_supervised!(
@@ -390,31 +424,35 @@ defmodule TowerSentryTest do
 
   test "reports message" do
     waiting_for(fn done ->
-      TestServer.add("/api/1/envelope", via: :post, to: fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert [_id, _header, event] = String.split(body, "\n", trim: true)
+          assert [_id, _header, event] = String.split(body, "\n", trim: true)
 
-        assert(
-          {
-            :ok,
-            %{
-              "level" => "info",
-              "environment" => "test",
-              "exception" => [],
-              "message" => %{
-                "formatted" => "something interesting happened"
+          assert(
+            {
+              :ok,
+              %{
+                "level" => "info",
+                "environment" => "test",
+                "exception" => [],
+                "message" => %{
+                  "formatted" => "something interesting happened"
+                }
               }
-            }
-          } = Jason.decode(event)
-        )
+            } = Jason.decode(event)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        end
+      )
 
       Tower.report_message(:info, "something interesting happened")
     end)
