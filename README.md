@@ -76,7 +76,7 @@ More details on https://hexdocs.pm/tower/Tower.html#module-manual-reporting.
 `TowerSentry` supports the following configuration options:
 
 - `:dsn` (`t:String.t/0`) - The DSN for your Sentry project. Setting this option is mandatory. Learn more about DSNs in the [official Sentry documentation](https://docs.sentry.io/concepts/key-terms/dsn-explainer/).
-- `:environment_name` (`t:String.t/0` or `t:atom/0`) - The current environment name. Setting this option is mandatory. Learn more about environments in the [official Sentry documentation](https://docs.sentry.io/concepts/key-terms/environments/).
+- `:environment_name` (`t:String.t/0` or `t:atom/0`) - The current environment name. The default value is `"production"`. Learn more about environments in the [official Sentry documentation](https://docs.sentry.io/concepts/key-terms/environments/).
 
 > #### Note on configuring the `:sentry` app directly {: .warning}
 >
