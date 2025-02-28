@@ -75,14 +75,22 @@ More details on https://hexdocs.pm/tower/Tower.html#module-manual-reporting.
 
 `TowerSentry` supports the following configuration options:
 
-- `:dsn` (`t:String.t/0`) - The DSN for your Sentry project. Setting this option is mandatory. Learn more about DSNs in the [official Sentry documentation](https://docs.sentry.io/concepts/key-terms/dsn-explainer/).
-- `:environment_name` (`t:String.t/0` or `t:atom/0`) - The current environment name. The default value is `"production"`. Learn more about environments in the [official Sentry documentation](https://docs.sentry.io/concepts/key-terms/environments/).
+- `:dsn` (`t:String.t/0`) - The DSN for your Sentry project. Setting this option is mandatory. Learn more about DSNs in
+  the [official Sentry documentation](https://docs.sentry.io/concepts/key-terms/dsn-explainer/).
+- `:environment_name` (`t:String.t/0` or `t:atom/0`) - The current environment name. The default value is
+  `"production"`. Learn more about environments in the [official Sentry documentation](https://docs.sentry.io/concepts/key-terms/environments/).
 
 > #### Note on configuring the `:sentry` app directly {: .warning}
 >
-> `TowerSentry` currently depends on the [official Sentry SDK for Elixir](`e:sentry:readme.html`) for some internal functionality. It is however considered to be an implementation detail of `TowerSentry`.
+> `TowerSentry` currently depends on the [official Sentry SDK for Elixir](`e:sentry:readme.html`) for some internal
+> functionality. It is however considered to be an implementation detail of `TowerSentry`.
 >
-> This means that while setting some config options in the `:sentry` application directly _will_ work and affect the reported event (outside of the options listed above, which `TowerSentry` overrides), you are doing so at your own risk; the `:sentry` dependency could be removed at any time in favor of a home grown implementation.
+> This means that while setting some config options in the `:sentry` application directly _will_ work and affect the
+> reported event (outside of the options listed above, which `TowerSentry` overrides), you are doing so at your own
+> risk; the `:sentry` dependency could be removed at any time in favor of a home grown implementation.
+>
+> Also note that setting `:sentry` configuration options that affect event collection or filtering will have no effect
+> as this is entirely handled by [Tower](`e:tower:Tower.html`).
 
 ## License
 
