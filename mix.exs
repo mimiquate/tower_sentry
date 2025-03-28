@@ -42,7 +42,7 @@ defmodule TowerSentry.MixProject do
 
       # Dev
       {:ex_doc, "~> 0.37.1", only: :dev, runtime: false},
-      {:blend, "~> 0.4.0", only: :dev},
+      {:blend, "~> 0.5.0", only: :dev},
 
       # Test
       {:jason, "~> 1.4", only: :test},
