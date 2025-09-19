@@ -28,8 +28,11 @@ if Code.ensure_loaded?(Igniter) and
       |> Tower.Igniter.reporters_list_append(TowerSentry)
       |> Tower.Igniter.runtime_configure_reporter(
         :tower_sentry,
-        dsn: ~s[System.get_env("SENTRY_DSN")],
-        environment_name: ~s[System.get_env("SENTRY_ENVIRONMENT")]
+        [
+          dsn: ~s[System.get_env("SENTRY_DSN")],
+          environment_name: ~s[System.get_env("SENTRY_ENVIRONMENT")]
+        ],
+        env: :prod
       )
     end
   end
