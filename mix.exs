@@ -3,7 +3,7 @@ defmodule TowerSentry.MixProject do
 
   @description "Error tracking and reporting to Sentry"
   @source_url "https://github.com/mimiquate/tower_sentry"
-  @version "0.3.3"
+  @version "0.3.4"
 
   def project do
     [
@@ -38,13 +38,13 @@ defmodule TowerSentry.MixProject do
   defp deps do
     [
       {:tower, "~> 0.7.1 or ~> 0.8.0"},
-      {:sentry, "~> 10.3"},
+      {:sentry, "~> 10.3 or ~> 11.0"},
 
       # Optional
       {:igniter, "~> 0.6", optional: true},
 
       # Dev
-      {:ex_doc, "~> 0.37.1", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.38.2", only: :dev, runtime: false},
       {:blend, "~> 0.5.0", only: :dev},
 
       # Test
