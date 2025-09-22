@@ -29,8 +29,9 @@ if Code.ensure_loaded?(Igniter) and
       |> Tower.Igniter.runtime_configure_reporter(
         :tower_sentry,
         [
-          dsn: ~s[System.get_env("SENTRY_DSN")],
-          environment_name: ~s[System.get_env("SENTRY_ENVIRONMENT")]
+          dsn: {:code, Sourceror.parse_string!(~s[System.get_env("SENTRY_DSN")])},
+          environment_name:
+            {:code, Sourceror.parse_string!(~s[System.get_env("SENTRY_ENVIRONMENT")])}
         ],
         env: :prod
       )
