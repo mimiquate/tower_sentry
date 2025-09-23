@@ -29,7 +29,8 @@ if Code.ensure_loaded?(Igniter) and
       |> Tower.Igniter.runtime_configure_reporter(
         :tower_sentry,
         dsn: code_value(~s[System.get_env("SENTRY_DSN")]),
-        environment_name: code_value(~s[System.get_env("SENTRY_ENVIRONMENT")])
+        environment_name:
+          code_value(~s[System.get_env("DEPLOYMENT_ENV", to_string(config_env()))])
       )
     end
 

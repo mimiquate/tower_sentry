@@ -45,7 +45,7 @@ And configure `:tower_sentry` (see [below](#configuration) for details on the av
 if config_env() == :prod do
   config :tower_sentry,
     dsn: System.get_env("SENTRY_DSN"),
-    environment_name: System.get_env("SENTRY_ENVIRONMENT")
+    environment_name: System.get_env("DEPLOYMENT_ENV", to_string(config_env()))
 end
 ```
 
