@@ -40,12 +40,14 @@ defmodule TowerSentry.MixProject do
       {:tower, "~> 0.7.1 or ~> 0.8.0"},
       {:sentry, "~> 10.3 or ~> 11.0"},
 
+      # Optional
+      {:igniter, "~> 0.6", optional: true},
+
       # Dev
       {:ex_doc, "~> 0.38.2", only: :dev, runtime: false},
       {:blend, "~> 0.5.0", only: :dev},
 
       # Test
-      {:jason, "~> 1.4", only: :test},
       {:hackney, "~> 1.20", only: :test},
       {:test_server, "~> 0.1.18", only: :test},
       {:plug_cowboy, "~> 2.7", only: :test},
