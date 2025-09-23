@@ -28,13 +28,13 @@ if Code.ensure_loaded?(Igniter) and
       |> Tower.Igniter.reporters_list_append(TowerSentry)
       |> Tower.Igniter.runtime_configure_reporter(
         :tower_sentry,
-        [
-          dsn: {:code, Sourceror.parse_string!(~s[System.get_env("SENTRY_DSN")])},
-          environment_name:
-            {:code, Sourceror.parse_string!(~s[System.get_env("SENTRY_ENVIRONMENT")])}
-        ],
-        env: :prod
+        dsn: code_value(~s[System.get_env("SENTRY_DSN")]),
+        environment_name: code_value(~s[System.get_env("SENTRY_ENVIRONMENT")])
       )
+    end
+
+    defp code_value(value) do
+      {:code, Sourceror.parse_string!(value)}
     end
   end
 else

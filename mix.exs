@@ -40,7 +40,7 @@ defmodule TowerSentry.MixProject do
       {
         :tower,
         "~> 0.7.1 or ~> 0.8.0",
-        github: "mimiquate/tower", branch: "igniter-more"
+        github: "mimiquate/tower"
       },
       {:sentry, "~> 10.3 or ~> 11.0"},
 
