@@ -3,7 +3,7 @@ defmodule TowerSentry.MixProject do
 
   @description "Error tracking and reporting to Sentry"
   @source_url "https://github.com/mimiquate/tower_sentry"
-  @version "0.3.4"
+  @version "0.3.5"
 
   def project do
     [
