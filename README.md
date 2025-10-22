@@ -83,7 +83,7 @@ end
 
 More details on https://hexdocs.pm/tower/Tower.html#module-manual-reporting.
 
-### Configuration
+## Configuration
 
 `TowerSentry` supports the following configuration options:
 
