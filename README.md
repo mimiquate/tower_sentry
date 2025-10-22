@@ -20,7 +20,15 @@ def deps do
 end
 ```
 
-## Usage
+## Setup
+
+### Option A: Automated setup
+
+```sh
+$ mix tower_sentry.install
+```
+
+### Option B: Manual setup
 
 Tell `Tower` to inform `TowerSentry` reporter about errors.
 
