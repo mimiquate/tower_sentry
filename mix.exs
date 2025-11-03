@@ -44,7 +44,7 @@ defmodule TowerSentry.MixProject do
       {:igniter, "~> 0.6", optional: true},
 
       # Dev
-      {:ex_doc, "~> 0.38.2", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.39.1", only: :dev, runtime: false},
       {:blend, "~> 0.5.0", only: :dev},
 
       # Test
