@@ -25,7 +25,7 @@ jobs:
             blend: sentry_10_3
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         if: ${{ ! matrix.lint }}
         with:
           path: |
