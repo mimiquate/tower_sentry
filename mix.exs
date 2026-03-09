@@ -48,7 +48,6 @@ defmodule TowerSentry.MixProject do
       {:blend, "~> 0.5.0", only: :dev},
 
       # Test
-      {:hackney, "~> 1.20", only: :test},
       {:test_server, "~> 0.1.18", only: :test},
       {:plug_cowboy, "~> 2.7", only: :test},
       {:bandit, "~> 1.5", only: :test}
