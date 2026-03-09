@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.6] - 2026-03-09
+
+### Added
+
+- Allow use with sentry 12.x (i.e. Updates `sentry` dependency requirement from `{:sentry, "~> 10.3 or ~> 11.0"}` to `{:sentry, ">= 10.3.0 and < 13.0.0"}`)
+
 ## [0.3.5] - 2025-09-26
 
 ### Added
@@ -63,6 +69,7 @@ automatically.
 - Support elixir 1.15+
 - Support sentry 10.3+
 
+[0.3.6]: https://github.com/mimiquate/tower_sentry/compare/v0.3.5...v0.3.6/
 [0.3.5]: https://github.com/mimiquate/tower_sentry/compare/v0.3.4...v0.3.5/
 [0.3.4]: https://github.com/mimiquate/tower_sentry/compare/v0.3.3...v0.3.4/
 [0.3.3]: https://github.com/mimiquate/tower_sentry/compare/v0.3.2...v0.3.3/
