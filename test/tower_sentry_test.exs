@@ -7,19 +7,13 @@ defmodule TowerSentryTest do
   setup do
     {:ok, _test_server} = TestServer.start()
 
-    Application.put_env(
-      :tower_sentry,
-      :dsn,
-      TestServer.url("/1", host: "public:secret@localhost")
-    )
-
-    Application.put_env(:tower_sentry, :environment_name, :test)
+    put_env(:tower_sentry, :dsn, TestServer.url("/1", host: "public:secret@localhost"))
+    put_env(:tower_sentry, :environment_name, :test)
     Sentry.put_config(:send_result, :sync)
-    Application.put_env(:tower, :reporters, [TowerSentry])
+    put_env(:tower, :reporters, [TowerSentry])
 
     on_exit(fn ->
       reset_sentry_dedupe()
-      Application.put_env(:tower_sentry, :dsn, nil)
       Sentry.put_config(:send_result, :none)
     end)
   end
@@ -59,7 +53,7 @@ defmodule TowerSentryTest do
               "function" =>
                 ~s(anonymous fn/0 in TowerSentryTest."test reports arithmetic error"/1),
               "filename" => "test/tower_sentry_test.exs",
-              "lineno" => 76
+              "lineno" => 70
             } = List.last(frames)
           )
 
@@ -108,7 +102,7 @@ defmodule TowerSentryTest do
             %{
               "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports throw"/1),
               "filename" => "test/tower_sentry_test.exs",
-              "lineno" => 125
+              "lineno" => 119
             } = List.last(frames)
           )
 
@@ -157,7 +151,7 @@ defmodule TowerSentryTest do
             %{
               "function" => ~s(anonymous fn/0 in TowerSentryTest."test reports abnormal exit"/1),
               "filename" => "test/tower_sentry_test.exs",
-              "lineno" => 174
+              "lineno" => 168
             } = List.last(frames)
           )
 
@@ -458,6 +452,54 @@ defmodule TowerSentryTest do
     end)
   end
 
+  test "logs client request error message" do
+    put_env(:sentry, :request_retries, [])
+
+    waiting_for(fn done ->
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          done.()
+
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(400, Jason.encode!(nil))
+        end
+      )
+
+      assert capture_log(fn ->
+               assert :ok = Tower.report_message(:info, "something")
+
+               Process.sleep(100)
+             end) =~ ~r/Failed to send Sentry event/
+    end)
+  end
+
+  test "logs internal server error" do
+    put_env(:sentry, :request_retries, [])
+
+    waiting_for(fn done ->
+      TestServer.add(
+        "/api/1/envelope",
+        via: :post,
+        to: fn conn ->
+          done.()
+
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(500, Jason.encode!(nil))
+        end
+      )
+
+      assert capture_log(fn ->
+               assert :ok = Tower.report_message(:info, "something")
+
+               Process.sleep(100)
+             end) =~ ~r/Failed to send Sentry event/
+    end)
+  end
+
   defp in_unlinked_process(fun) when is_function(fun, 0) do
     {:ok, pid} = Task.Supervisor.start_link()
 
@@ -491,5 +533,18 @@ defmodule TowerSentryTest do
     end)
 
     assert_receive({^ref, :sent}, 500)
+  end
+
+  defp put_env(app, key, value) do
+    original_value = Application.get_env(app, key)
+    Application.put_env(app, key, value)
+
+    on_exit(fn ->
+      if original_value == nil do
+        Application.delete_env(app, key)
+      else
+        Application.put_env(app, key, original_value)
+      end
+    end)
   end
 end
