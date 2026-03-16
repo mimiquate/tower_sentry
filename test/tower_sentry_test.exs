@@ -500,6 +500,18 @@ defmodule TowerSentryTest do
     end)
   end
 
+  test "logs when network error" do
+    put_env(:sentry, :request_retries, [])
+    # Point to a localhost port that we know it's not going to work
+    put_env(:tower_sentry, :dsn, "http://public:secret@localhost:0/1")
+
+    assert capture_log(fn ->
+             assert :ok = Tower.report_message(:info, "something")
+
+             Process.sleep(100)
+           end) =~ ~r/Failed to send Sentry event/
+  end
+
   defp in_unlinked_process(fun) when is_function(fun, 0) do
     {:ok, pid} = Task.Supervisor.start_link()
 
