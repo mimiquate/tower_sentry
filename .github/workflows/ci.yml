@@ -25,7 +25,7 @@ jobs:
             erlang: '25.3.2.21'
             blend: sentry_10
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/cache@v5
         if: ${{ ! matrix.lint }}
         with:
