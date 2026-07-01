@@ -17,13 +17,12 @@ jobs:
             erlang: '28.5.0.2'
           - elixir: '1.18'
             erlang: '27.3.4.13'
-            blend: sentry_11
           - elixir: '1.17'
             erlang: '26.2.5.21'
             blend: tower_0_7
           - elixir: '1.16'
             erlang: '25.3.2.21'
-            blend: sentry_10
+            blend: sentry_11
     steps:
       - uses: actions/checkout@v7
       - uses: actions/cache@v6
